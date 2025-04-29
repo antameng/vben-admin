@@ -1,7 +1,7 @@
 {
   "welcomeBack": "欢迎回来",
-  "pageTitle": "开箱即用的大型中后台管理系统",
-  "pageDesc": "工程化、高性能、跨组件库的前端模版",
+  "pageTitle": "供应链协同管理系统",
+  "pageDesc": "高效、自动化的办公",
   "loginSuccess": "登录成功",
   "loginSuccessDesc": "欢迎回来",
   "loginSubtitle": "请输入您的帐户信息以开始管理您的项目",
@@ -9,6 +9,7 @@
   "username": "账号",
   "password": "密码",
   "usernameTip": "请输入用户名",
+  "verifycodeTip": "请输入验证码",
   "passwordTip": "请输入密码",
   "verifyRequiredTip": "请先完成验证",
   "passwordErrorTip": "密码错误",

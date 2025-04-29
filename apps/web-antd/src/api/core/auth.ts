@@ -9,7 +9,9 @@ export namespace AuthApi {
 
   /** 登录接口返回值 */
   export interface LoginResult {
-    accessToken: string;
+    data: {
+      access_token: string;
+    };
   }
 
   export interface RefreshTokenResult {
@@ -48,4 +50,36 @@ export async function logoutApi() {
  */
 export async function getAccessCodesApi() {
   return requestClient.get<string[]>('/auth/codes');
+}
+
+/**
+ * 获取用户权限 即后端路由
+ */
+export async function getAccessMeumApi() {
+  return requestClient.get<string[]>('/menu/tree/list');
+}
+
+/**
+ *  获取公司
+ */
+
+export interface CompList {
+  comp: string;
+  dsca: string;
+  ctyp: number;
+}
+export interface CompListResult {
+  success: boolean;
+  compList: CompList[];
+  message: string;
+}
+export async function getComps() {
+  return requestClient.get<CompListResult>('/comp/list');
+}
+export interface CaptchaImageResult {
+  img: string;
+  uuid: string;
+}
+export async function getCaptchaImage() {
+  return requestClient.get<CaptchaImageResult>('/auth/captchaImage');
 }
