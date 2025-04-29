@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import type { ExtendedModalApi, ModalProps } from './modal';
 
-import { computed, nextTick, provide, ref, useId, watch } from 'vue';
-
 import {
   useIsMobile,
   usePriorityValues,
@@ -25,6 +23,7 @@ import {
 import { ELEMENT_ID_MAIN_CONTENT } from '@vben-core/shared/constants';
 import { globalShareState } from '@vben-core/shared/global-state';
 import { cn } from '@vben-core/shared/utils';
+import { computed, nextTick, provide, ref, useId, watch } from 'vue';
 
 import { useModalDraggable } from './use-modal-draggable';
 
@@ -77,6 +76,7 @@ const {
   loading: showLoading,
   modal,
   openAutoFocus,
+  overlayBlur,
   showCancelButton,
   showConfirmButton,
   title,
@@ -196,6 +196,7 @@ const getAppendTo = computed(() => {
       :open="state?.isOpen"
       :show-close="closable"
       :z-index="zIndex"
+      :overlay-blur="overlayBlur"
       close-class="top-3"
       @close-auto-focus="handleFocusOutside"
       @closed="() => modalApi?.onClosed()"
