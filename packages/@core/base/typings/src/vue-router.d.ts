@@ -44,6 +44,10 @@ interface RouteMeta {
     | 'warning'
     | string;
   /**
+   * 路由的完整路径作为key（默认true）
+   */
+  fullPathKey?: boolean;
+  /**
    * 当前路由的子级在菜单中不展现
    * @default false
    */
@@ -97,6 +101,10 @@ interface RouteMeta {
    * 菜单可以看到，但是访问会被重定向到403
    */
   menuVisibleWithForbidden?: boolean;
+  /**
+   * 不使用基础布局（仅在顶级生效）
+   */
+  noBasicLayout?: boolean;
   /**
    * 在新窗口打开
    */

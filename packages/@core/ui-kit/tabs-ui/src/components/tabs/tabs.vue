@@ -11,7 +11,7 @@ interface Props extends TabsProps {}
 
 defineOptions({
   name: 'VbenTabs',
-  // eslint-disable-next-line perfectionist/sort-objects
+
   inheritAttrs: false,
 });
 const props = withDefaults(defineProps<Props>(), {
@@ -46,14 +46,14 @@ const typeWithClass = computed(() => {
 
 const tabsView = computed(() => {
   return props.tabs.map((tab) => {
-    const { fullPath, meta, name, path } = tab || {};
+    const { fullPath, meta, name, path, key } = tab || {};
     const { affixTab, icon, newTabTitle, tabClosable, title } = meta || {};
     return {
       affixTab: !!affixTab,
       closable: Reflect.has(meta, 'tabClosable') ? !!tabClosable : true,
       fullPath,
       icon: icon as string,
-      key: fullPath || path,
+      key,
       meta,
       name,
       path,

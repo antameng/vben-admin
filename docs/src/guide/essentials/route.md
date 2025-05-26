@@ -62,12 +62,10 @@ import type { RouteRecordRaw } from 'vue-router';
 
 import { VBEN_LOGO_URL } from '@vben/constants';
 
-import { BasicLayout } from '#/layouts';
 import { $t } from '#/locales';
 
 const routes: RouteRecordRaw[] = [
   {
-    component: BasicLayout,
     meta: {
       badgeType: 'dot',
       badgeVariants: 'destructive',
@@ -103,7 +101,6 @@ export default routes;
 
 ::: tip
 
-- 多级路由的父级路由无需设置 `component` 属性，只需设置 `children` 属性即可。除非你真的需要在父级路由嵌套下显示内容。
 - 如果没有特殊情况，父级路由的 `redirect` 属性，不需要指定，默认会指向第一个子路由。
 
 :::
@@ -113,12 +110,10 @@ export default routes;
 ```ts
 import type { RouteRecordRaw } from 'vue-router';
 
-import { BasicLayout } from '#/layouts';
 import { $t } from '#/locales';
 
 const routes: RouteRecordRaw[] = [
   {
-    component: BasicLayout,
     meta: {
       icon: 'ic:baseline-view-in-ar',
       keepAlive: true,
@@ -238,12 +233,10 @@ import type { RouteRecordRaw } from 'vue-router';
 
 import { VBEN_LOGO_URL } from '@vben/constants';
 
-import { BasicLayout } from '#/layouts';
 import { $t } from '#/locales';
 
 const routes: RouteRecordRaw[] = [
   {
-    component: BasicLayout,
     meta: {
       icon: 'mdi:home',
       title: $t('page.home.title'),
@@ -347,6 +340,10 @@ interface RouteMeta {
     | 'warning'
     | string;
   /**
+   * 路由的完整路径作为key（默认true）
+   */
+  fullPathKey?: boolean;
+  /**
    * 当前路由的子级在菜单中不展现
    * @default false
    */
@@ -400,6 +397,10 @@ interface RouteMeta {
    * 菜单可以看到，但是访问会被重定向到403
    */
   menuVisibleWithForbidden?: boolean;
+  /**
+   * 当前路由不使用基础布局（仅在顶级生效）
+   */
+  noBasicLayout?: boolean;
   /**
    * 在新窗口打开
    */
@@ -505,6 +506,13 @@ interface RouteMeta {
 
 用于配置页面的徽标颜色。
 
+### fullPathKey
+
+- 类型：`boolean`
+- 默认值：`true`
+
+是否将路由的完整路径作为tab key（默认true）
+
 ### activePath
 
 - 类型：`string`
@@ -584,6 +592,13 @@ _注意:_ 排序仅针对一级菜单有效，二级菜单的排序需要在对�
 
 用于配置页面的菜单参数，会在菜单中传递给页面。
 
+### noBasicLayout
+
+- 类型：`boolean`
+- 默认值：`false`
+
+用于配置当前路由不使用基础布局，仅在顶级时生效。默认情况下，所有的路由都会被包裹在基础布局中（包含顶部以及侧边等导航部件），如果你的页面不需要这些部件，可以设置 `noBasicLayout` 为 `true`。
+
 ## 路由刷新
 
 路由刷新方式如下：
@@ -598,3 +613,32 @@ const { refresh } = useRefresh();
 refresh();
 </script>
 ```
+
+## 标签页与路由控制
+
+在某些场景下，需要单个路由打开多个标签页，或者修改路由的query不打开新的标签页
+
+每个标签页Tab使用唯一的key标识，设置Tab key有三种方式，优先级由高到低：
+
+- 使用路由query参数pageKey
+
+```vue
+<script setup lang="ts">
+import { useRouter } from 'vue-router';
+// 跳转路由
+const router = useRouter();
+router.push({
+  path: 'path',
+  query: {
+    pageKey: 'key',
+  },
+});
+```
+
+- 路由的完整路径作为key
+
+`meta` 属性中的 `fullPathKey`不为false，则使用路由`fullPath`作为key
+
+- 路由的path作为key
+
+`meta` 属性中的 `fullPathKey`为false，则使用路由`path`作为key
