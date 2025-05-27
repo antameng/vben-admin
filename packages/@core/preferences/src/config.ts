@@ -22,6 +22,7 @@ const defaultPreferences: Preferences = {
     enableCheckUpdates: true,
     enablePreferences: true,
     enableRefreshToken: false,
+    showApiErrorMessage: true,
     isMobile: false,
     layout: 'sidebar-nav',
     locale: 'zh-CN',

@@ -72,6 +72,10 @@ interface AppPreferences {
   /** 偏好设置按钮位置 */
   preferencesButtonPosition: PreferencesButtonPositionType;
   /**
+   * @zh_CN 是否显示接口错误消息
+   */
+  showApiErrorMessage: boolean;
+  /**
    * @zh_CN 是否开启水印
    */
   watermark: boolean;

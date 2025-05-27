@@ -33,9 +33,7 @@ export const useAuthStore = defineStore('auth', () => {
     let userInfo: null | UserInfo = null;
     try {
       loginLoading.value = true;
-      const {
-        data: { access_token },
-      } = await loginApi({
+      const { access_token } = await loginApi({
         ...params,
         password: window.btoa(params.password),
       });

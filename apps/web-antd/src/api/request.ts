@@ -71,12 +71,55 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
     },
   });
 
+  // 数据格式转换拦截器
+  client.addResponseInterceptor({
+    fulfilled: (response) => {
+      const { data } = response;
+
+      // 如果数据已经是标准格式，直接返回
+      if (
+        data &&
+        typeof data === 'object' &&
+        'code' in data &&
+        'data' in data
+      ) {
+        return response;
+      }
+
+      // 如果不是标准格式 转换数据为标准格式  同意默认为200 成功 请求
+      return {
+        ...response,
+        data: {
+          code: '200',
+          data,
+          message: '',
+        },
+      };
+    },
+    rejected: (error) => {
+      // 处理错误情况
+      const responseData = error?.response?.data ?? {};
+      const formattedError = new Error(
+        responseData?.error ?? responseData?.message ?? '请求失败',
+      );
+      (formattedError as any).response = {
+        ...error.response,
+        data: {
+          code: error?.response?.status ?? 500,
+          data: null,
+          message: responseData?.error ?? responseData?.message ?? '请求失败',
+        },
+      };
+      return Promise.reject(formattedError);
+    },
+  });
+
   // 处理返回的响应数据格式
   client.addResponseInterceptor(
     defaultResponseInterceptor({
       codeField: 'code',
       dataField: 'data',
-      successCode: 0,
+      successCode: '200',
     }),
   );
 
@@ -95,11 +138,20 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
   client.addResponseInterceptor(
     errorMessageResponseInterceptor((msg: string, error) => {
       // 这里可以根据业务进行定制,你可以拿到 error 内的信息进行定制化处理，根据不同的 code 做不同的提示，而不是直接使用 message.error 提示 msg
-      // 当前mock接口返回的错误字段是 error 或者 message
+      // 当前mock接口返回的错误字段是 error 或者 message 或者msg
       const responseData = error?.response?.data ?? {};
-      const errorMessage = responseData?.error ?? responseData?.message ?? '';
+      const errorMessage =
+        responseData?.error ?? responseData?.message ?? responseData?.msg ?? '';
       // 如果没有错误信息，则会根据状态码进行提示
-      message.error(errorMessage || msg);
+      // 优先使用请求配置中的 showErrorMessage，如果没有则使用全局配置
+      const showError =
+        error?.config?.showErrorMessage ?? preferences.app.showApiErrorMessage;
+      if (
+        showError &&
+        (responseData.code !== '200' || responseData.code !== 200)
+      ) {
+        message.error(errorMessage || msg);
+      }
     }),
   );
 

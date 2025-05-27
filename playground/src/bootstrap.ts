@@ -1,6 +1,5 @@
-import { $t, setupI18n } from '#/locales';
-import { router } from '#/router';
-import { VueQueryPlugin } from '@tanstack/vue-query';
+import { createApp, watchEffect } from 'vue';
+
 import { registerAccessDirective } from '@vben/access';
 import { registerLoadingDirective } from '@vben/common-ui';
 import { preferences } from '@vben/preferences';
@@ -9,14 +8,13 @@ import '@vben/styles';
 import '@vben/styles/antd';
 
 import { useTitle } from '@vueuse/core';
-import { createApp, watchEffect } from 'vue';
+
+import { $t, setupI18n } from '#/locales';
+import { router } from '#/router';
 
 import { initComponentAdapter } from './adapter/component';
 import { initSetupVbenForm } from './adapter/form';
 import App from './app.vue';
-
-import '@vben/styles';
-import '@vben/styles/antd';
 
 async function bootstrap(namespace: string) {
   // 初始化组件适配器

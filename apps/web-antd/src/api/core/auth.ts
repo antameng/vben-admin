@@ -9,9 +9,11 @@ export namespace AuthApi {
 
   /** 登录接口返回值 */
   export interface LoginResult {
-    data: {
-      access_token: string;
-    };
+    access_token: string;
+    expires_in: number;
+    refresh_token: string;
+    scope: string;
+    token_type: string;
   }
 
   export interface RefreshTokenResult {
