@@ -31,10 +31,7 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
         duration: 1.5,
       });
       let routerList = await getAllMenusApi();
-      routerList = transformRouterList(routerList).map((item: any) => {
-        item.component = 'BasicLayout';
-        return item;
-      });
+      routerList = transformRouterList(routerList);
       return routerList;
     },
     // 可以指定没有权限跳转403页面
