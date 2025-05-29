@@ -1,11 +1,13 @@
 <script lang="ts" setup>
 import type { RouteLocationNormalized } from 'vue-router';
 
-import { preferences } from '@vben/preferences';
-import { useTabbarStore } from '@vben/stores';
-import { VbenSpinner } from '@vben-core/shadcn-ui';
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
+
+import { preferences } from '@vben/preferences';
+import { useTabbarStore } from '@vben/stores';
+
+import { VbenSpinner } from '@vben-core/shadcn-ui';
 
 defineOptions({ name: 'IFrameRouterView' });
 
@@ -53,8 +55,20 @@ function canRender(tabItem: RouteLocationNormalized) {
   }
   return tabbarStore.getTabs.some((tab) => tab.name === name);
 }
-
+const actualSrc = 'sysapp.gree.com/GREESCM/m/skipto';
+const iframeRefs = ref<HTMLIFrameElement[]>([]);
+function setIframeRef(el: HTMLIFrameElement, index: number) {
+  iframeRefs.value[index] = el;
+}
 function hideLoading(index: number) {
+  iframeRefs.value[index]?.contentWindow?.postMessage(
+    {
+      // sourceUrl: `/${props.iframeSrc}`,
+      resetSession: false,
+      token: localStorage.getItem('token'),
+    },
+    '*',
+  );
   spinningList.value[index] = false;
 }
 
@@ -63,6 +77,22 @@ function showSpinning(index: number) {
   // 首次加载时显示loading
   return curSpinning === undefined ? true : curSpinning;
 }
+
+// onMounted(() => {
+//   window.addEventListener('message', async (e) => {
+//     // if (e.data === 'refresh') {
+//     //   window.open(this_.iframeSrc, `iframe${this_.currIndex}`, '');
+//     // }
+//     // eslint-disable-next-line no-console
+//     console.log(e.data); // e.data为传递过来的数据
+//     // eslint-disable-next-line no-console
+//     console.log(e.origin); // e.origin为调用 postMessage 时消息发送方窗口的 origin（域名、协议和端口）
+//     // eslint-disable-next-line no-console
+//     console.log(e.source); // e.source为对发送消息的窗口对象的引用，可以使用此来在具有不同origin的两个窗口之间建立双向通信
+//   });
+// });
+// eslint-disable-next-line no-console
+console.log(iframeRoutes, 'iframe路由');
 </script>
 <template>
   <template v-if="showIframe">
@@ -74,7 +104,8 @@ function showSpinning(index: number) {
       >
         <VbenSpinner :spinning="showSpinning(index)" />
         <iframe
-          :src="item.meta.iframeSrc as string"
+          :ref="(el) => el && setIframeRef(el, index)"
+          :src="actualSrc"
           class="size-full"
           @load="hideLoading(index)"
         ></iframe>
