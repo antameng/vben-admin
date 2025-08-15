@@ -308,6 +308,8 @@ useVbenForm 返回的第二个参数，是一个对象，包含了一些表单�
 | showCollapseButton | 是否显示折叠按钮 | `boolean` | `false` |
 | wrapperClass | 表单的布局，基于tailwindcss | `any` | - |
 | actionWrapperClass | 表单操作区域class | `any` | - |
+| actionLayout | 表单操作按钮位置 | `'newLine' \| 'rowEnd' \| 'inline'` | `rowEnd` |
+| actionPosition | 表单操作按钮对齐方式 | `'left' \| 'center' \| 'right'` | `right` |
 | handleReset | 表单重置回调 | `(values: Record<string, any>,) => Promise<void> \| void` | - |
 | handleSubmit | 表单提交回调 | `(values: Record<string, any>,) => Promise<void> \| void` | - |
 | handleValuesChange | 表单值变化回调 | `(values: Record<string, any>, fieldsChanged: string[]) => void` | - |
@@ -324,6 +326,7 @@ useVbenForm 返回的第二个参数，是一个对象，包含了一些表单�
 | submitOnEnter | 按下回车健时提交表单 | `boolean` | false |
 | submitOnChange | 字段值改变时提交表单(内部防抖，这个属性一般用于表格的搜索表单) | `boolean` | false |
 | compact | 是否紧凑模式(忽略为校验信息所预留的空间) | `boolean` | false |
+| scrollToFirstError | 表单验证失败时是否自动滚动到第一个错误字段 | `boolean` | false |
 
 ::: tip handleValuesChange
 
@@ -394,7 +397,7 @@ export interface FormCommonConfig {
    * 所有表单项的栅格布局
    * @default ""
    */
-  formItemClass?: string;
+  formItemClass?: (() => string) | string;
   /**
    * 隐藏所有表单项label
    * @default false

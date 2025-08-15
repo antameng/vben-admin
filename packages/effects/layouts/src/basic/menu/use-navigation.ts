@@ -1,7 +1,8 @@
 import type { RouteRecordNormalized } from 'vue-router';
 
-import { isHttpUrl, openRouteInNewWindow, openWindow } from '@vben/utils';
 import { useRouter } from 'vue-router';
+
+import { isHttpUrl, openRouteInNewWindow, openWindow } from '@vben/utils';
 
 function useNavigation() {
   const router = useRouter();
@@ -31,6 +32,10 @@ function useNavigation() {
     return route?.meta?.openInNewWindow ?? false;
   };
 
+  const resolveHref = (path: string): string => {
+    return router.resolve(path).href;
+  };
+
   const navigation = async (path: string) => {
     try {
       const route = routeMetaMap.get(path);
@@ -39,7 +44,7 @@ function useNavigation() {
       if (isHttpUrl(path)) {
         openWindow(path, { target: '_blank' });
       } else if (openInNewWindow) {
-        openRouteInNewWindow(path);
+        openRouteInNewWindow(resolveHref(path));
       } else {
         await router.push({
           path,

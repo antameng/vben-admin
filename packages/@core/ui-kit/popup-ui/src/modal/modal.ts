@@ -6,6 +6,11 @@ import type { ModalApi } from './modal-api';
 
 export interface ModalProps {
   /**
+   * 动画类型
+   * @default 'slide'
+   */
+  animationType?: 'scale' | 'slide';
+  /**
    * 是否要挂载到内容区域
    * @default false
    */
@@ -146,11 +151,11 @@ export interface ModalState extends ModalProps {
   sharedData?: Record<string, any>;
 }
 
-export type ExtendedModalApi = {
+export type ExtendedModalApi = ModalApi & {
   useStore: <T = NoInfer<ModalState>>(
     selector?: (state: NoInfer<ModalState>) => T,
   ) => Readonly<Ref<T>>;
-} & ModalApi;
+};
 
 export interface ModalApiOptions extends ModalState {
   /**
